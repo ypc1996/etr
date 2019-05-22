@@ -172,4 +172,31 @@ public class PayController {
         }
         return true;
     }
+
+
+    /**
+     * add by LJW on 2019-05-21
+     * 用户支付完成后，获取该用户的 UnionId，无需用户授权。本接口支持第三方平台代理查询。
+     * 注意：调用前需要用户完成支付，且在支付后的五分钟内有效。
+     * @param accessToken
+     * @param openid
+     * @return
+     *
+     * unionid	string	用户唯一标识，调用成功后返回
+     * errcode	number	错误码
+     * errmsg	string	错误信息
+     */
+    @RequestMapping("/getPaidUnionId")
+    public Map<String,String> getPaidUnionId(String accessToken,String openid){
+        String url = "https://api.weixin.qq.com/wxa/getpaidunionid?access_token="+accessToken+"&openid="+openid;
+        String responseStr= WxPayUtils.httpRequest(url,"GET",null);
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String,String> map=null;
+        try {
+            map = mapper.readValue(responseStr,Map.class);//readValue到一个原始数据类型.
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
 }
