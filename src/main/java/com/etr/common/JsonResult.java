@@ -43,7 +43,11 @@ public class JsonResult {
         this.msg = msg;
     }
 
+
     public JsonResult() {
+    }
+    public JsonResult(Object data) {
+        this.data = data;
     }
 
     public JsonResult(Boolean isSuccess, Object data, Integer statusCode, String msg) {

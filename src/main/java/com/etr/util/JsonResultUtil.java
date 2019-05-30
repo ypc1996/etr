@@ -20,4 +20,7 @@ public class JsonResultUtil {
         jsonResult.makeStatusAndMsg(statusEnum);
         return jsonResult;
     }
+
+
+
 }

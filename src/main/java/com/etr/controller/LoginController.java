@@ -1,13 +1,22 @@
 package com.etr.controller;
 
+import com.etr.common.JsonResult;
+import com.etr.em.GlobalEnum;
+import com.etr.model.User;
+import com.etr.service.UserService;
+import com.etr.util.JWTUtils;
+import com.etr.util.JsonResultUtil;
 import com.etr.util.WxPayUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,20 +32,47 @@ public class LoginController {
     private String secret;
     @Value("${grant_type}")
     private String grant_type;
+
+    @Autowired
+    private UserService userService;
+
+
     //微信小程序登录
     @RequestMapping(value = "/wxLogin", method = RequestMethod.GET)
-    public Map<String,Object> wxLogin(String code){
+    public JsonResult wxLogin(String code){
         String js_code=code;//登录获取的code
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+appid+"&secret="+secret+"&js_code="+js_code+"&grant_type="+grant_type;
         String responseStr= WxPayUtils.httpRequest(url,"GET",null);
         ObjectMapper mapper = new ObjectMapper();
+
         Map<String,Object> map=null;
+        String token = "";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String createTime = simpleDateFormat.format(new Date());
         try {
+
             map = mapper.readValue(responseStr,Map.class);//readValue到一个原始数据类型.
+            String openid = (String)map.get("openid");
+            //身份验证是否成功
+            User user = userService.getUserInfobyOpenID((String)map.get(openid));
+            if(user == null) {
+                user.setOpenId(openid);
+                user.setCreateTime(createTime);
+                userService.addUser(user);
+            }
+
+            //返回token
+            token = JWTUtils.getToken(user);
+            if (token != null) {
+                userService.addUser(user);
+                //添加到token表
+                userService.addToken(token,openid,createTime);
+                return JsonResultUtil.createSucess(token);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return map;
+        return JsonResultUtil.createError(GlobalEnum.ERROR);
     }
 
     /**
