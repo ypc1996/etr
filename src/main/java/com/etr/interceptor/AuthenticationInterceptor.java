@@ -10,12 +10,14 @@ import com.etr.common.JsonResult;
 import com.etr.em.GlobalEnum;
 import com.etr.model.AccessToken;
 import com.etr.model.User;
+
 import com.etr.service.AccessTokenService;
 import com.etr.service.UserService;
 import com.etr.util.JWTUtils;
 import com.etr.util.JsonResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,6 +35,7 @@ import java.util.Date;
  */
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
+
     @Autowired
     private UserService userService;
 
@@ -41,6 +44,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Value("${EXPIRE_TIME}")
     private long EXPIRE_TIME;
+
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse response, Object object) throws Exception {
@@ -61,7 +65,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         } catch (JWTDecodeException j) {
             throw new RuntimeException("401");
         }
-        User user = userService.findUserById(userId);
+
+       User user = userService.findUserById(Integer.valueOf(userId));
 
         if (user == null) {
             JsonResult jsonResult = JsonResultUtil.createError(GlobalEnum.NO_USER_ERROR);
@@ -75,7 +80,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         // 验证 token
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getOpenId())).build();
         try {
-            jwtVerifier.verify(token);
+           jwtVerifier. verify(token);
         } catch (JWTVerificationException e) {
             JsonResult jsonResult = JsonResultUtil.createError(GlobalEnum.VERIFY_FAILURE);
             responseMessage(response,response.getWriter(),jsonResult);
@@ -83,7 +88,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 //          throw new RuntimeException("401");
         }
         //token是否过期
-        if(JWTUtils.isExpires(createDate,EXPIRE_TIME)){
+        if(!JWTUtils.isExpires(createDate,EXPIRE_TIME)){
             JsonResult jsonResult = JsonResultUtil.createError(GlobalEnum.TIME_EXPIRED_ERROR);
             responseMessage(response,response.getWriter(),jsonResult);
             return false;

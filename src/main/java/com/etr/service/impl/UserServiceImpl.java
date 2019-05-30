@@ -7,34 +7,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by LJW on 2019/5/23 - 21:49
+<
+ * @Author: ypc
+ * @Date: 2019/5/25 10:57
+ * @Description:
  */
 @Service
-public class UserServiceImpl implements UserService{
-
+public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
-
     @Override
-    public User findUserById(String userId) {
-        return userMapper.findUserById(userId);
-
+    public User findUserById(Integer id) {
+        return userMapper.findUserById(id);
     }
 
     @Override
-    public User getUserInfobyOpenID(String openID) {
-
-        return userMapper.getUserInfobyOpenID(openID);
+    public User findUserByOpenId(String openId) {
+        return userMapper.findUserByOpenId(openId);
     }
 
     @Override
-    public boolean addUser(User user) {
-
+    public Integer addUser(User user) {
         return userMapper.addUser(user);
     }
 
     @Override
-    public void addToken(String token, String openid, String createTime) {
-
+    public Integer updateUser(User user) {
+        return userMapper.updateUser(user);
     }
 }

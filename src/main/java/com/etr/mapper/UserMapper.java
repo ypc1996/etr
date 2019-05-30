@@ -2,11 +2,17 @@ package com.etr.mapper;
 
 import com.etr.model.User;
 
+import org.apache.ibatis.annotations.Param;
+
 /**
- * Created by LJW on 2019/5/23 - 21:51
+ * @Author: ypc
+ * @Date: 2019/5/25 10:54
+ * @Description:
  */
 public interface UserMapper {
-    User findUserById(String userId);
-    User getUserInfobyOpenID(String openID);
-    boolean addUser(User user);
+    User findUserById(@Param("id") Integer id);
+    User findUserByOpenId(@Param("openId")String openId);
+    Integer addUser(User user);
+    Integer updateUser(User user);
+
 }

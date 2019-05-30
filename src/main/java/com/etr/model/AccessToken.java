@@ -10,6 +10,21 @@ public class AccessToken {
     private String openId;
     private Date createDate;
     private Date updateDate;
+    private Integer id;
+    public AccessToken(){}
+    public AccessToken(String accessToken,String openId){
+        this.accessToken = accessToken;
+        this.openId = openId;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
 
     public String getAccessToken() {
         return accessToken;
@@ -18,6 +33,7 @@ public class AccessToken {
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
+
 
     public String getOpenid() {
         return openId;
@@ -41,5 +57,6 @@ public class AccessToken {
 
     public void setUpdateDate(Date updateDate) {
         this.updateDate = updateDate;
+
     }
 }

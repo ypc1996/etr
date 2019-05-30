@@ -33,15 +33,13 @@ public class JWTUtils {
      * @param user
      * @return 加密的token
      */
-    public static String getToken(User user) {
+    public static String createToken(User user) {
         openid = user.getOpenId();
         //过期时间
 //        Date expireDate = new Date(System.currentTimeMillis() + EXPIRE_TIME);
         String token="";
         token= JWT.create().withAudience(String.valueOf(user.getId()))
-//                .withExpiresAt(expireDate)
                 .sign(Algorithm.HMAC256(user.getOpenId()));
-
         return token;
     }
 
@@ -120,7 +118,6 @@ public class JWTUtils {
 //    }
 
     public static boolean isExpires(Date nowtime, long timelimit) throws ParseException {
-
 
         long cuttentTime = System.currentTimeMillis();
 

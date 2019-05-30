@@ -3,12 +3,15 @@ package com.etr.service;
 import com.etr.model.User;
 
 /**
- * Created by LJW on 2019/5/23 - 21:48
+ * @Author: ypc
+ * @Date: 2019/5/25 10:57
+ * @Description:
  */
 public interface UserService {
-    User findUserById(String userId);
-    User  getUserInfobyOpenID(String openID);
-    boolean addUser(User user);
+    User findUserById(Integer id);
+    User findUserByOpenId(String openId);
+    Integer addUser(User user);
+    Integer updateUser(User user);
 
-    void addToken(String token, String openid, String createTime);
+
 }

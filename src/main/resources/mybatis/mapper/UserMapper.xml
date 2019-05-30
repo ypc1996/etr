@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etr.mapper.UserMapper">
+    <resultMap id="user" type="com.etr.model.User">
+        <result column="id" property="id"/>
+        <result column="username" property="userName"/>
+        <result column="password" property="passWord"/>
+        <result column="type" property="type"/>
+        <result column="name" property="name"/>
+        <result column="mobile" property="mobile"/>
+        <result column="wx" property="wx"/>
+        <result column="company_id" property="companyId"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="position" property="position"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="last_login_time" property="lastLoginTime"/>
+        <result column="reg_ip" property="regIp"/>
+        <result column="verify" property="verify"/>
+        <result column="open_id" property="openId"/>
+        <result column="union_id" property="unionId"/>
+        <result column="city" property="city"/>
+        <result column="head_img_url" property="headImgUrl"/>
+        <result column="sex" property="sex"/>
+
+    </resultMap>
+<select id="findUserById" resultMap="user">
+    SELECT * FROM user WHERE id=#{id}
+</select>
+    <select id="findUserByOpenId" resultMap="user">
+        SELECT * FROM user WHERE open_id=#{openId}
+    </select>
+    <insert id="addUser" parameterType="com.etr.model.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user
+        (username,password,type,name,mobile,wx,company_id,brand_id,position,last_login_time,reg_ip,verify,open_id,union_id,city,head_img_url,sex)
+        VALUES (#{userName},#{passWord},#{type},#{name},#{mobile},#{wx},#{companyId},#{brandId},#{position},#{lastLoginTime},#{regIp},#{verify},#{openId},#{unionId},#{city},#{headImgUrl},#{sex})
+    </insert>
+    <update id="updateUser" parameterType="com.etr.model.User">
+        UPDATE user <set>
+        <if test="userName!=null">
+            username=#{userName},
+        </if>
+        <if test="passWord!=null">
+            password=#{passWord},
+        </if>
+        <if test="type!=null">
+            type=#{type},
+        </if>
+        <if test="name!=null">
+            name=#{name},
+        </if>
+        <if test="mobile!=null">
+            mobile=#{mobile},
+        </if>
+        <if test="wx!=null">
+            wx=#{wx},
+        </if>
+        <if test="companyId!=null">
+            company_id=#{companyId},
+        </if>
+        <if test="brandId!=null">
+            brand_id=#{brandId},
+        </if>
+        <if test="position!=null">
+            position=#{position},
+        </if>
+        <if test="lastLoginTime!=null">
+            last_login_time=#{lastLoginTime},
+        </if>
+        <if test="regIp!=null">
+            reg_ip=#{regIp},
+        </if>
+        <if test="verify!=null">
+            verify=#{verify},
+        </if>
+        <if test="openId!=null">
+            open_id=#{openId},
+        </if>
+        <if test="unionId!=null">
+            union_id=#{unionId},
+        </if>
+        <if test="city!=null">
+            city=#{city},
+        </if>
+        <if test="headImgUrl!=null">
+            head_img_url=#{headImgUrl},
+        </if>
+        <if test="sex!=null">
+            sex=#{sex},
+        </if>
+    </set>
+        WHERE id=#{id}
+    </update>
+</mapper>
