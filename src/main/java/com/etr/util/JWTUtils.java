@@ -13,7 +13,7 @@ public class JWTUtils {
     public static String getToken(User user) {
         String token="";
         token= JWT.create().withAudience(String.valueOf(user.getId()))
-                .sign(Algorithm.HMAC256(user.getPassWord()));
+                .sign(Algorithm.HMAC256(user.getOpenId()));
         return token;
     }
 }

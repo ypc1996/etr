@@ -14,10 +14,11 @@ public class JsonResultUtil {
         jsonResult.makeStatusAndMsg(GlobalEnum.SUCESS);
         return  jsonResult;
     }
-    public static JsonResult createError(GlobalEnum statusEnum){
+    public static JsonResult createError(GlobalEnum statusEnum,Object object){
         JsonResult jsonResult=new JsonResult();
         jsonResult.setIsSuccess(false);
         jsonResult.makeStatusAndMsg(statusEnum);
+        jsonResult.setData(object);
         return jsonResult;
     }
 }

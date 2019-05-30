@@ -6,6 +6,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.etr.model.User;
+import com.etr.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,6 +22,8 @@ import java.lang.reflect.Method;
  * @Description:
  */
 public class AuthenticationInterceptor implements HandlerInterceptor {
+    @Autowired
+    private UserService userService;
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
         String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
@@ -40,13 +44,12 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         } catch (JWTDecodeException j) {
             throw new RuntimeException("401");
         }
-//       User user = userService.findUserById(userId);
-        User user=new User();
+       User user = userService.findUserById(Integer.valueOf(userId));
         if (user == null) {
             throw new RuntimeException("用户不存在，请重新登录");
         }
         // 验证 token
-        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassWord())).build();
+        JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getOpenId())).build();
         try {
             jwtVerifier.verify(token);
         } catch (JWTVerificationException e) {

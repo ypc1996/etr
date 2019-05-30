@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * Created by ypc on 2019-5-20.
  */
-@RequestMapping("")
+@RequestMapping("pay")
 @RestController
 public class PayController {
     @Value("${appid}")
@@ -79,7 +79,6 @@ public class PayController {
         //MD5运算生成签名，这里是第一次签名，用于调用统一下单接口
         String mysign = WxPayUtils.createSign(prestr, key, "utf-8").toUpperCase();
         packageParams.put("sign",mysign);
-        packageParams.put("notify_url",notify_url);
         String xml=WxPayUtils.mapToXml(packageParams);
         //调用统一下单接口，并接受返回的结果
         String result = WxPayUtils.httpRequest(pay_url, "POST", xml);
