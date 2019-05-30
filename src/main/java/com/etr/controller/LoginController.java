@@ -59,7 +59,7 @@ public class LoginController {
             map = mapper.readValue(responseStr,Map.class);//readValue到一个原始数据类型.
         } catch (IOException e) {
             e.printStackTrace();
-            return JsonResultUtil.createError(GlobalEnum.ERROR,e);
+            return JsonResultUtil.createError(GlobalEnum.ERROR);
         }
         String openId= (String) map.get("openid");
         User user=userService.findUserByOpenId(openId);
@@ -80,7 +80,7 @@ public class LoginController {
     @RequestMapping(value = "/sendSms", method = RequestMethod.GET)
     public JsonResult sendSms(String mobile){
         if(smsVcodeService.findByMobileVCode(mobile,null,0)!=null){
-            JsonResultUtil.createError(GlobalEnum.SMS_REPEAT_ERROR,null);
+            JsonResultUtil.createError(GlobalEnum.SMS_REPEAT_ERROR);
         }
         int vCode=RandomUtils.getRamdomCode();
         String templateParam="{\"code\":\""+vCode+"\"}";
@@ -90,7 +90,7 @@ public class LoginController {
             jsonResult = SendSmsUtils.sendSms(accessKeyId,accessKeySecret,mobile,"联途广告",templateCode,templateParam,"");
         } catch (ClientException e) {
             e.printStackTrace();
-            return JsonResultUtil.createError(GlobalEnum.SMS_ERROR,e);
+            return JsonResultUtil.createError(GlobalEnum.SMS_ERROR);
         }
         //调用成功写入数据库 sms_vcode
         ObjectMapper mapper = new ObjectMapper();
@@ -103,7 +103,7 @@ public class LoginController {
         Integer result=smsVcodeService.addSmsVCode(new SmsVCode(mobile,String.valueOf(vCode),reStr,0));
         if(result>0)
             return jsonResult;
-        return JsonResultUtil.createError(GlobalEnum.BIND_MOBILE_ERROR,null);
+        return JsonResultUtil.createError(GlobalEnum.BIND_MOBILE_ERROR);
     }
     /**
      * add by ypc on 2019-5-21 绑定手机
@@ -120,7 +120,7 @@ public class LoginController {
                     return JsonResultUtil.createSucess(user);
             }
         }
-        return JsonResultUtil.createError(GlobalEnum.BIND_MOBILE_ERROR,null);
+        return JsonResultUtil.createError(GlobalEnum.BIND_MOBILE_ERROR);
 
     }
     /**
@@ -157,6 +157,6 @@ public class LoginController {
         smsVCode.setUsed(1);
         if(smsVcodeService.updateSmsVCode(smsVCode)>0)
             return JsonResultUtil.createSucess(smsVCode);
-        return JsonResultUtil.createError(GlobalEnum.ERROR,null);
+        return JsonResultUtil.createError(GlobalEnum.ERROR);
     }
 }
