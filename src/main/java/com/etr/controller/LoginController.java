@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,8 @@ public class LoginController {
     private String signName;
     @Value("${templateCode}")
     private String templateCode;
+    @Value("${EXPIRE_TIME}")
+    private long expireTime;
     @Autowired
     private UserService userService;
     @Autowired
@@ -82,13 +85,37 @@ public class LoginController {
                 if(userService.addUser(newUser)>0)
                     map.put("userId",newUser.getId());
             }
+            //是否有token
+            AccessToken accessToken = accessTokenService.getAccessTokenbyOpenId(openId);
+            if(accessToken == null){
+                token = JWTUtils.createToken(user);
+                accessTokenService.addAccessToken(new AccessToken(token,openId));
+                map.put("token",token);
+                return JsonResultUtil.createSucess(map);
+            }
 
-            token = JWTUtils.createToken(user);
-            //添加到token表
-            accessTokenService.addAccessToken(new AccessToken(token,openId));
+            token = accessToken.getAccessToken();
+            Date createTime = accessToken.getCreateDate();
+            Date updateTime = accessToken.getUpdateDate();
+            Date isTime = new Date();
+            if(createTime == updateTime){
+                isTime = createTime;
+            }
+            isTime = updateTime;
+            //判断token是否过期
+            if(!JWTUtils.isExpires(isTime,expireTime)){
+                token = JWTUtils.createToken(user);
+                AccessToken atoken = new AccessToken();
+                atoken.setAccessToken(token);
+                atoken.setOpenid(openId);
+                accessTokenService.updateAccessToken(atoken);
+            }
+            map.put("token",token);
         } catch (IOException e) {
             e.printStackTrace();
             return JsonResultUtil.createError(GlobalEnum.ERROR);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return JsonResultUtil.createSucess(map);
     }

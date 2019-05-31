@@ -1,6 +1,7 @@
 package com.etr.mapper;
 
 import com.etr.model.AccessToken;
+import org.springframework.stereotype.Service;
 
 
 /**

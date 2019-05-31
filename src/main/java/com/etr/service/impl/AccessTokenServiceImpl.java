@@ -26,6 +26,6 @@ public class AccessTokenServiceImpl implements AccessTokenService{
 
     @Override
     public AccessToken getAccessTokenbyOpenId(String openId) {
-        return getAccessTokenbyOpenId(openId);
+        return accessTokenMapper.getAccessTokenbyOpenId(openId);
     }
 }

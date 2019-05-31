@@ -121,8 +121,8 @@ public class JWTUtils {
 
         long cuttentTime = System.currentTimeMillis();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        long time = simpleDateFormat.parse(nowtime.toString()).getTime();
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+        long time = Long.parseLong(nowtime.toString());
         if((cuttentTime-time) < timelimit){
             return true;
         }

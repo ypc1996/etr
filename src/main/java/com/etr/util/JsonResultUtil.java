@@ -21,6 +21,12 @@ public class JsonResultUtil {
         return jsonResult;
     }
 
-
+    public static JsonResult createError(GlobalEnum statusEnum,Object object){
+        JsonResult jsonResult=new JsonResult();
+        jsonResult.setIsSuccess(false);
+        jsonResult.setData(object);
+        jsonResult.makeStatusAndMsg(statusEnum);
+        return jsonResult;
+    }
 
 }
